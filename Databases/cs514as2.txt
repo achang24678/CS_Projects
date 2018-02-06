@@ -1,0 +1,296 @@
+login as: cssc0063
+
+This system is provided by San Diego State University for the use of
+authorized users only.  Individuals using this computer system without
+authority, or in violation of state or federal laws are subject to having
+their activities monitored by law enforcement officials.
+
+Contact Us:
+            Location: Love Library 2nd Floor
+            Phone:    619.594.3189
+            Email:    hub@mail.sdsu.edu
+
+cssc0063@edoras.sdsu.edu's password:
+Last login: Tue Jul 18 16:00:14 2017 from 162.198.68.243
+
+Edoras.sdsu.edu is a CentOS 7.3 server at San Diego State University
+ . For more information about EDORAS see http://edoras.sdsu.edu
+ . Software available on EDORAS http://edoras.sdsu.edu/software
+ . The Sciences printer in GMCS is lw2, email nash@mail for access
+ Send suggestions to nash@mail.sdsu.edu
+
+The 2017 version of X-Win32 is now avaliable at edoras.sdsu.edu/software
+
+[cssc0063@edoras ~]$ sqlplus st63/cs514@cs514
+
+SQL*Plus: Release 11.2.0.4.0 Production on Tue Jul 18 16:44:54 2017
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining
+and Real Application Testing options
+
+SQL> alter table empbb02 add constraint empbb02_empno_pk PRIMARY KEY(empno);
+alter table empbb02 add constraint empbb02_empno_pk PRIMARY KEY(empno)
+                                                    *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> alter table infobb02 add constraint infobb02_empno_pk PRIMARY KEY(empno);
+alter table infobb02 add constraint infobb02_empno_pk PRIMARY KEY(empno)
+                                                      *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> alter table deptbb02 add constraint deptbb02_deptno_pk PRIMARY KEY(deptno);
+alter table deptbb02 add constraint deptbb02_deptno_pk PRIMARY KEY(deptno)
+                                                       *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> select ename as "Last Name", to_char (hiredate, 'YYYYMMDD') as "Intel Date" from empbb02;
+
+Last Name        Intel Da
+---------------- --------
+Leroy Rober
+rickey           19980101
+lasorda          19980110
+bochy            19980111
+berra            19980112
+musial           19980201
+gehrig           19980311
+
+minoso           19980505
+sandberg         19980228
+cey              19990110
+williams         19990105
+
+Last Name        Intel Da
+---------------- --------
+johnson          19981108
+brown            19991018
+mays             19980101
+mungo            20000310
+rodriguez        20011016
+
+16 rows selected.
+
+SQL> alter table salsbb02 add constraint pk_salsbb PRIMARY KEY(GRADE, ROLE, LOSAL, HISAL);
+alter table salsbb02 add constraint pk_salsbb PRIMARY KEY(GRADE, ROLE, LOSAL, HISAL)
+                                              *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> alter table infobb02 add constraint uni UNIQUE(UNI);
+alter table infobb02 add constraint uni UNIQUE(UNI)
+                                        *
+ERROR at line 1:
+ORA-02261: such unique or primary key already exists in the table
+
+
+SQL> column motto format a10
+SQL> select * from deptbb02;
+
+    DEPTNO DNAME    RESTAURANT      LOCATION        MOTTO
+---------- -------- --------------- --------------- ----------
+        10 infield  Jade            Clairmont       Let's play
+                                                     two!
+
+        20 outfield House of Pasta  Santee          Alea iacta
+                                                     est
+
+        30 pitcher  Crab Shack      Pacific Beach   Semper par
+                                                    atus
+
+        40 staff    Burger King     Lakeside        Experienti
+                                                    a docet
+
+    DEPTNO DNAME    RESTAURANT      LOCATION        MOTTO
+---------- -------- --------------- --------------- ----------
+
+        50 catchers Pinnacle Peak   Santee          Non bastar
+                                                    di carboru
+                                                    ndum
+
+
+SQL>  alter table infobb02 add foreign key(empno) references empbb02(empno);
+ alter table infobb02 add foreign key(empno) references empbb02(empno)
+                          *
+ERROR at line 1:
+ORA-02275: such a referential constraint already exists in the table
+
+
+SQL> alter table empbb02 add foreign key(deptno)references deptbb02(deptno);
+alter table empbb02 add foreign key(deptno)references deptbb02(deptno)
+                        *
+ERROR at line 1:
+ORA-02275: such a referential constraint already exists in the table
+
+
+SQL> alter table empbb02 add constraint CHK_ename CHECK(ename NOT LIKE '%q%' AND ename NOT LIKE '%Q%');
+alter table empbb02 add constraint CHK_ename CHECK(ename NOT LIKE '%q%' AND ename NOT LIKE '%Q%')
+                                   *
+ERROR at line 1:
+ORA-02264: name already used by an existing constraint
+
+
+SQL> alter table empbb02 modify ename varchar2(16);
+
+Table altered.
+
+SQL> insert into empbb02 values(700,'Dan Quisenberry','','','','','','');
+insert into empbb02 values(700,'Dan Quisenberry','','','','','','')
+*
+ERROR at line 1:
+ORA-02290: check constraint (ST63.CHK_ENAME) violated
+
+
+SQL> select * from empbb02;
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+29    Leroy Rober      pitcher
+
+
+712   rickey           gm                01-JAN-98      10000         40
+
+
+735   lasorda          coach        712  10-JAN-98       2000         40
+
+
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+707   bochy            coach        712  11-JAN-98       2000         40
+
+
+798   berra            coach        712  12-JAN-98       2000         40
+
+
+782   musial           right field  707  01-FEB-98      42000         20
+
+
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+763   gehrig           first base   735  11-MAR-98      85000         10
+
+
+777   minoso           shortstop    735  05-MAY-98      85000         10
+      6000
+
+721   sandberg         second base  735  28-FEB-98      25000         10
+
+
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+788   cey              third base   735  10-JAN-99      15000         10
+      8000
+
+720   williams         left field   707  05-JAN-99     150000         20
+
+
+755   johnson          pitcher      798  08-NOV-98      50000         30
+
+
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+744   brown            pitcher      798  18-OCT-99      40000         30
+      4000
+
+730   mays             center field 707  01-JAN-98     240000         20
+
+
+799   mungo            pitcher      798  10-MAR-00      20000         30
+     12000
+
+
+EMPNO ENAME            POS          BOSS HIREDATE         SAL     DEPTNO
+----- ---------------- ------------ ---- --------- ---------- ----------
+INCENTIVES
+----------
+766   rodriguez        catcher      735  16-OCT-01     100000         50
+
+
+
+16 rows selected.
+
+SQL> select * from infobb02;
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+712   branch                     56
+735   tommy                      62
+707   bruce                      64          220
+777   orestes    minnie          27          270         32
+763   lou        iron horse      14          350
+782   stan       the man         19          342
+798   larry      yogi            66          290
+788   ron        penguin         35          287
+730   willie     say hey kid     24          325
+755   randy      the big unit    8           123       2.15
+744   mordecai   3 fingers       25          168       3.27
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+721   ryne       rhino           17          294
+799   van lingle                 31          220       2.82
+720   ted        taddy ballgame  10          350
+766   ivan       pudge           4           339
+
+15 rows selected.
+
+SQL> drop table empbb02;
+drop table empbb02
+           *
+ERROR at line 1:
+ORA-02449: unique/primary keys in table referenced by foreign keys
+
+
+
+
+SQL> select * from infobb02;
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+712   branch                     56                               1967
+735   tommy                      62                               1997
+707   bruce                      64          220
+777   orestes    minnie          27          270         32
+763   lou        iron horse      14          350                  1939
+782   stan       the man         19          342                  1969
+798   larry      yogi            66          290
+788   ron        penguin         35          287
+730   willie     say hey kid     24          325                  1979
+755   randy      the big unit    8           123       2.15       2015
+744   mordecai   3 fingers       25          168       3.27       1949
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+721   ryne       rhino           17          294                  2005
+799   van lingle                 31          220       2.82
+720   ted        taddy ballgame  10          350                  1966
+766   ivan       pudge           4           339
+
+15 rows selected.
+
+SQL>

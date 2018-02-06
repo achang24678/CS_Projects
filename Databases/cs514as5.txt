@@ -1,0 +1,182 @@
+login as: cssc0063
+
+This system is provided by San Diego State University for the use of
+authorized users only.  Individuals using this computer system without
+authority, or in violation of state or federal laws are subject to having
+their activities monitored by law enforcement officials.
+
+Contact Us:
+            Location: Love Library 2nd Floor
+            Phone:    619.594.3189
+            Email:    hub@mail.sdsu.edu
+
+cssc0063@edoras.sdsu.edu's password:
+Last login: Mon Aug  7 17:25:14 2017 from 162.198.68.243
+
+Edoras.sdsu.edu is a CentOS 7.3 server at San Diego State University
+ . For more information about EDORAS see http://edoras.sdsu.edu
+ . Software available on EDORAS http://edoras.sdsu.edu/software
+ . The Sciences printer in GMCS is lw2, email nash@mail for access
+ Send suggestions to nash@mail.sdsu.edu
+
+The 2017 version of X-Win32 is now avaliable at edoras.sdsu.edu/software
+
+
+[cssc0063@edoras ~]$ cat emptrig.dat
+
+CREATE OR REPLACE TRIGGER emptrig
+AFTER INSERT ON empbb02
+FOR EACH ROW
+DECLARE
+BEGIN
+        insert into newhires values(:new.empno,:new.ename,:new.hiredate);
+END;
+/
+
+
+
+SQL> select year from rainfall where aug > 0.04;
+
+      YEAR
+----------
+      1852
+      1853
+      1854
+      1866
+      1867
+      1870
+      1872
+      1873
+      1875
+      1876
+      1880
+
+      YEAR
+----------
+      1885
+      1892
+      1896
+      1899
+      1906
+      1908
+      1910
+      1912
+      1918
+      1926
+      1931
+
+      YEAR
+----------
+      1935
+      1936
+      1945
+      1951
+      1955
+      1967
+      1977
+      1983
+      1984
+      1992
+      2014
+
+33 rows selected.
+
+
+
+
+SQL> CREATE OR REPLACE TYPE xtrabases AS OBJECT(
+        num_doubles number(5), num_triples number(5), num_homeruns number(5),
+        member function dingers return number);
+/
+
+Type created.
+
+SQL> CREATE OR REPLACE TYPE BODY xtrabases
+AS
+member function dingers return number
+IS
+BEGIN
+        return self.num_homeruns;
+END;
+END;
+/
+
+Type body created.
+
+
+
+SQL> CREATE TYPE teams AS VARRAY(6) OF VARCHAR2(30);
+/
+
+Type created.
+
+SQL> CREATE TABLE stats(firstname varchar2(10),lastname varchar2(10), xtrabases xtrabases,team teams);
+
+Table created.
+
+SQL> insert into stats values('Bench','Johnny',xtrabases(381,24,389),teams('Cincinnati Reds'));
+
+1 row created.
+
+SQL> insert into stats values('Williams','Ted',xtrabases(525,71,521),teams('Boston Red Sox'));
+
+1 row created.
+
+SQL> insert into stats values('Biggio','Craig',xtrabases(668,55,291),teams('Houston Astros'));
+
+1 row created.
+
+SQL> insert into stats values('Carew','Rod',xtrabases(445,112,92),teams('Minnesota Twins','California Angels'));
+
+1 row created.
+
+
+SQL> insert into stats values('Cepeda','Orlando',xtrabases(417,27,379),teams('San Francisco Giants','St. Louis Cardinals','Atlanta Braves','Boston Red Sox','Kansas City Royals'));
+
+1 row created.
+
+SQL> select * from stats;
+
+FIRSTNAME  LASTNAME
+---------- ----------
+XTRABASES(NUM_DOUBLES, NUM_TRIPLES, NUM_HOMERUNS)
+--------------------------------------------------------------------------------
+TEAM
+--------------------------------------------------------------------------------
+Bench      Johnny
+XTRABASES(381, 24, 389)
+TEAMS('Cincinnati Reds')
+
+Williams   Ted
+XTRABASES(525, 71, 521)
+TEAMS('Boston Red Sox')
+
+FIRSTNAME  LASTNAME
+---------- ----------
+XTRABASES(NUM_DOUBLES, NUM_TRIPLES, NUM_HOMERUNS)
+--------------------------------------------------------------------------------
+TEAM
+--------------------------------------------------------------------------------
+
+Biggio     Craig
+XTRABASES(668, 55, 291)
+TEAMS('Houston Astros')
+
+Carew      Rod
+XTRABASES(445, 112, 92)
+
+FIRSTNAME  LASTNAME
+---------- ----------
+XTRABASES(NUM_DOUBLES, NUM_TRIPLES, NUM_HOMERUNS)
+--------------------------------------------------------------------------------
+TEAM
+--------------------------------------------------------------------------------
+TEAMS('Minnesota Twins', 'California Angels')
+
+Cepeda     Orlando
+XTRABASES(417, 27, 379)
+TEAMS('San Francisco Giants', 'St. Louis Cardinals', 'Atlanta Braves', 'Boston R
+ed Sox', 'Kansas City Royals')
+
+
+SQL>

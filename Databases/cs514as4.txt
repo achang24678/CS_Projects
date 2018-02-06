@@ -1,0 +1,296 @@
+login as: cssc0063
+
+This system is provided by San Diego State University for the use of
+authorized users only.  Individuals using this computer system without
+authority, or in violation of state or federal laws are subject to having
+their activities monitored by law enforcement officials.
+
+Contact Us:
+            Location: Love Library 2nd Floor
+            Phone:    619.594.3189
+            Email:    hub@mail.sdsu.edu
+
+cssc0063@edoras.sdsu.edu's password:
+Last login: Tue Aug  1 16:19:48 2017 from 162.198.68.243
+
+Edoras.sdsu.edu is a CentOS 7.3 server at San Diego State University
+ . For more information about EDORAS see http://edoras.sdsu.edu
+ . Software available on EDORAS http://edoras.sdsu.edu/software
+ . The Sciences printer in GMCS is lw2, email nash@mail for access
+ Send suggestions to nash@mail.sdsu.edu
+
+The 2017 version of X-Win32 is now avaliable at edoras.sdsu.edu/software
+
+[cssc0063@edoras ~]$ sqlplus st63/cs514@cs514
+
+SQL*Plus: Release 11.2.0.4.0 Production on Tue Aug 1 16:21:42 2017
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+ERROR:
+ORA-28002: the password will expire within 112 days
+
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining
+and Real Application Testing options
+
+SQL> alter table infobb02 add constraint retireuni check(uni <> 9 AND uni <> 29 AND uni <> 32);
+alter table infobb02 add constraint retireuni check(uni <> 9 AND uni <> 29 AND uni <> 32)
+                                    *
+ERROR at line 1:
+ORA-02264: name already used by an existing constraint
+
+
+SQL> insert into infobb02 values(10,'','',9,'','','','');
+insert into infobb02 values(10,'','',9,'','','','')
+*
+ERROR at line 1:
+ORA-02290: check constraint (ST63.RETIREUNI) violated
+
+
+SQL> insert into infobb02 values(10,'','',29,'','','','');
+insert into infobb02 values(10,'','',29,'','','','')
+*
+ERROR at line 1:
+ORA-02290: check constraint (ST63.RETIREUNI) violated
+
+
+SQL> insert into infobb02 values(10,'','',32,'','','','');
+insert into infobb02 values(10,'','',32,'','','','')
+*
+ERROR at line 1:
+ORA-02290: check constraint (ST63.RETIREUNI) violated
+
+
+
+[cssc0063@edoras ~]$ cat jdbcp3.java
+import java.io.*;
+import java.util.*;
+import java.sql.*;
+public class jdbcp3 {
+  public static void main(String [] aa) {
+    String url;
+    url = "jdbc:oracle:thin:@moria.sdsu.edu:1521:cs514";
+    Statement stmt;
+    Connection conn;
+    Scanner scan = new Scanner(System.in);
+    System.out.println("Enter employee number: ");
+    String num = scan.nextLine();
+
+    String query = "select empno, average from infobb02" +
+          "where empno = " + num;
+
+    try {
+      Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
+    }
+    catch (Exception e) {
+      System.out.println("MR.UnitSitQueries.constructor.Exception: " +
+        e);
+    }
+    try {
+      conn = DriverManager.getConnection(url,aa[0],aa[1]);
+      stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(query);
+        while(rs.next()){
+                String s1 = rs.getString("EMPNO");
+                String s2 = rs.getString(2);
+
+                if(s2 == null){
+                        s2 = "0";
+                }
+
+                int average = Integer.parseInt(s2);
+
+                if(average == 0){
+                        System.out.println("employee with eid " + s1 + "has no batting average");
+                }
+                if(average < 200){
+                        System.out.println("employee with eid " + s1 + "has an average below the Mendoza line");
+                }
+                else{
+                        System.out.println("employee with eid " + s1 + "has a batting average of " + average);
+                }
+        }
+      stmt.close();
+      conn.close();
+    }
+    catch (SQLException e){System.err.println("OOPS " + e.getMessage());}
+  }
+}
+
+
+
+SQL> select c.ename as "coach", p.ename as "player" from empbb02 c,empbb02 p where c.deptno = 40 and p.deptno = 10;
+
+coach      player
+---------- ----------
+rickey     gehrig
+rickey     minoso
+rickey     sandberg
+rickey     cey
+lasorda    gehrig
+lasorda    minoso
+lasorda    sandberg
+lasorda    cey
+bochy      gehrig
+bochy      minoso
+bochy      sandberg
+
+coach      player
+---------- ----------
+bochy      cey
+berra      gehrig
+berra      minoso
+berra      sandberg
+berra      cey
+
+16 rows selected.
+
+
+
+[cssc0063@edoras ~]$ cat getuninumber.dat
+CREATE OR REPLACE FUNCTION getUninum(name IN empbb02.ename%TYPE)
+    RETURN infobb02.uni%TYPE AS guni infobb02.uni%TYPE;
+BEGIN
+  SELECT uni
+  INTO guni
+  FROM empbb02,infobb02
+  WHERE empbb02.empno = infobb02.empno AND name = ename;
+  RETURN(guni);
+END;
+/
+[cssc0063@edoras ~]$ cat test_getuni.dat
+SET SERVEROUTPUT ON;
+DECLARE
+        out varchar2(4);
+BEGIN
+        out := getUninum('minoso');
+        DBMS_OUTPUT.PUT_LINE(out);
+END;
+/
+
+SQL> start test_getuni.dat
+
+27
+
+PL/SQL procedure successfully completed.
+
+
+
+
+[cssc0063@edoras ~]$ cat emp_eraverage.sql
+CREATE OR REPLACE PROCEDURE emp_eraverage (name IN empbb02.ename%TYPE
+        v_era OUT infobb02.era%TYPE, v_ave OUT infobb02.average%TYPE)
+AS
+
+BEGIN
+        SELECT infobb02.era, infobb02.average
+        INTO v_era,v_ave
+        FROM infobb02,empbb02
+        WHERE empbb02.ename = name and infobb02.empno = empbb02.empno;
+          CASE
+                WHEN v_era IS NULL THEN
+                        v_era := 0;
+                WHEN v_ave IS NULL THEN
+                        v_ave := 0;
+        END CASE;
+
+        DBMS_OUTPUT.PUT_LINE(name|| ' has an era of ' ||v_era|| ' and an average of '|| v_ave);
+END;
+/
+
+[cssc0063@edoras ~]$ cat test_emp_eraverage.dat
+
+SET SERVEROUT ON;
+set pages 100
+
+DECLARE
+        v_era NUMBER;
+        v_ave NUMBER;
+BEGIN
+        emp_eraverage('minoso',v_era,v_ave);
+
+END;
+/
+
+
+
+SQL> select * from infobb02;
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+      WHIP
+----------
+712   branch                     56
+
+
+735   tommy                      62
+
+
+707   bruce                      64          220
+
+
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+      WHIP
+----------
+777   orestes    minnie          27          270         32
+         1
+
+763   lou        iron horse      14          350
+
+
+782   stan       the man         19          342
+
+
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+      WHIP
+----------
+798   larry      yogi            66          290
+
+
+788   ron        penguin         35          287
+
+
+730   willie     say hey kid     24          325
+
+
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+      WHIP
+----------
+755   randy      the big unit    8           123       2.15
+     1.171
+
+744   mordecai   3 fingers       25          168       3.27
+      1.07
+
+721   ryne       rhino           17          294
+
+
+
+EMPNO FNAME      NICK            UNI     AVERAGE        ERA    HOFDATE
+----- ---------- --------------- ---- ---------- ---------- ----------
+      WHIP
+----------
+799   van lingle                 31          220       2.82
+     1.337
+
+720   ted        taddy ballgame  10          350
+
+
+766   ivan       pudge           4           339
+
+
+
+15 rows selected.
+
+
+

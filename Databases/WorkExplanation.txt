@@ -1,0 +1,1 @@
+Database manipulation through coding in SQL and under Oracle SQL environment. These are my working codes for practice of table and data manipulation.
