@@ -1,0 +1,35 @@
+prog1_1:
+
+Take user input as space delimited, and then print out each token in the form of =token=. Only accepts at most 65 characters.
+
+prog1_2:
+
+Prompt the user with ">", space delimited the input, at most 65 characters. Take the tokens and print their maching type INT or STR. (note: 3.14 should be treated as string)
+
+prog1_3:
+
+Prompt the user with ">", space delimited the input, at most 65 characters. If more than two tokens entered, print error message. If within two tokens range, print the maching type INT or STR following the rule from prog1_2.
+
+prog1_4:
+
+Prompt the user with ">", space delimited the input, at most 20 characters. If more than 20 chars, print error. If more than two tokens, print error. If within two tokens range, print type. Loop until "quit"(case insensitve) enter, then quit immediately.
+
+prog1_5:
+
+Prompt the user with ">", space delimited the input, at most 65 characters. More than 65 chars or two tokens will print error. If within two tokens range, program expects token type enter as STR INT, or STR only. If token type is wrong, reprompt until correct matching occurs, or "quit" enter.
+
+prog1_6:
+
+Takes single integer command line argument. If more than one command line argument or input != integer,print error. If correct input enetered, follow prog1_5.
+
+prog2_1:
+
+Imelmented in C++,and will take a single interger N command line argument. The program then perfrom as prog1_6 except it requires re-implement the c++ code with c++ format.
+
+prog2_2:
+
+It performs the same way as prog2-1 except the program will only accept N correct inputs and then terminate right away instead of waiting till the N input reaches. I created Tokenizer.cpp along with Tokenizer.hpp that count and return numbers of tokens to prog2_2.cpp that deal with error correction, printting stuff, and organizing the return token(s).
+
+prog2_3:
+
+Implement code and operate it with Stack.cpp and Stack.hpp. By implementing Stack in the program, I am able to function the code as the way the stack function. We push value onto the stack or pop the value out, and the program will follow the rule from prog2_2, in which it will only accept N correct inputs and then prints out the stack status and terminate. 
